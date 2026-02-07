@@ -1,11 +1,3 @@
-/*****************************************
- * Created On: 2025 / 11 / 28
- * Last Modified: 2025 / 11 / 28
- * 
- * Author: Ané Burger t.a. Arroww Web Dev
- * 
-******************************************/
-
 import express from 'express';
 import path from 'path';
 import validator from 'validator';
