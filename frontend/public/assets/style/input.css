@@ -1,0 +1,18 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+/* Tailwind v4 */
+@import "tailwindcss";
+
+/* Correct relative sources from frontend/public/assets/style/ */
+@source "../../public/**/*.html";
+@source "../../src/**/*.{js,jsx,ts,tsx}";
+
+/* Optional custom styles */
+body { background: #F0F6EA; }
+
+.font-montserrat { font-family: 'Montserrat', sans-serif; }
+.font-playfair { font-family: 'Playfair Display', serif; }
+
+.grecaptcha-badge { visibility: hidden; }
