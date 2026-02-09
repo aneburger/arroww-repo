@@ -2,11 +2,15 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home";
 import DotGridBackground from "./components/DotGridBackground";
+import LogoCursor from "./components/LogoCursor";
+import NavBar from "./components/NavBar";
 
 const App = () => {
     return (
             <BrowserRouter>
                 <div style={{ position: "relative", minHeight: "100vh" }}>
+                    {/* <LogoCursor size={48} ease={0.16} /> */}
+                    <NavBar />
                     <DotGridBackground
                         dotSize={4}
                         gap={14}

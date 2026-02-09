@@ -5,8 +5,13 @@
 @import "tailwindcss";
 
 /* Correct relative sources from frontend/public/assets/style/ */
-@source "../../public/**/*.html";
-@source "../../src/**/*.{js,jsx,ts,tsx}";
+/*
+	input.css lives at: frontend/public/assets/style/input.css
+	- frontend/public is: ../../
+	- frontend/src is: ../../../src
+*/
+@source "../../**/*.{html,js}";
+@source "../../../src/**/*.{js,jsx,ts,tsx}";
 
 /* Optional custom styles */
 body { background: #FFFFFF; }

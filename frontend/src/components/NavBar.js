@@ -1,212 +1,240 @@
-/*****************************************
- * Created On: 2025 / 12 / 01
- * Last Modified: 2025 / 12 / 01
- * 
- * Author: Ané Burger t.a. Arroww Web Dev
- * 
-******************************************/
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import ContactForm from "./ContactForm";
+function scrollToSection(sectionId) {
+  if (typeof document === "undefined") return;
+  if (sectionId === "home") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
 
-const NAV_TEXT = "#2F4926";
+  const el = document.getElementById(sectionId);
+  el?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
-const HamburgerIcon = ({ className = "" }) => (
-  <svg
-    aria-hidden="true"
-    viewBox="0 0 24 24"
-    className={`${className} stroke-[1.1]`}
-    fill="none"
-    stroke={NAV_TEXT}
-  >
-    <path d="M3 6h18M3 12h18M3 18h18" />
-  </svg>
-);
-
-const CloseIcon = ({ className = "" }) => (
-  <svg
-    aria-hidden="true"
-    viewBox="0 0 24 24"
-    className={`${className} stroke-[1.1]`}
-    fill="none"
-    stroke={NAV_TEXT}
-  >
-    <path d="M6 6l12 12M18 6l-12 12" />
-  </svg>
-);
-
-const NavBar = () => {
-  const [open, setOpen] = useState(false);
-  const [portfolioOpen, setPortfolioOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const toggleMenu = () => setOpen((v) => !v);
-  const closeMenu = () => {
-    setOpen(false);
-    setPortfolioOpen(false);
+function BurgerIcon({ open }) {
+  const common = {
+    stroke: "#CC5050",
+    strokeWidth: 0.7,
+    strokeLinecap: "round",
   };
 
-  const openContact = () => {
-    setContactOpen(true);
-    setOpen(false);
-    setPortfolioOpen(false);
-  };
-  const closeContact = () => setContactOpen(false);
-
-
-  const goToServices = () => {
-    const doScroll = () => {
-      const el = document.getElementById("services");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-    closeMenu();
-    if (location.pathname !== "/") {
-      navigate("/");
-      // Give React a tick to render home before scrolling
-      setTimeout(doScroll, 80);
-    } else {
-      doScroll();
-    }
+  const lineStyle = {
+    transition: "transform 180ms ease, opacity 140ms ease",
+    transformOrigin: "center",
+    transformBox: "fill-box",
   };
 
   return (
-    <>
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 font-montserrat transition-colors duration-300 ${
-        scrolled ? "bg-[#F0F6EA]" : "bg-transparent"
-      }`}
+    <svg
+      className="w-[35px] h-[35px]"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
     >
-      {/* Bar */}
-      <div className="relative flex items-center justify-center h-12 md:h-14 lg:h-16">
-        {/* Center title only when scrolled */}
-        {scrolled && (
-          <h1 className="text-sm md:text-base lg:text-lg tracking-wide text-center" style={{ color: NAV_TEXT }}>
-            SCHÖN PHOTOGRAPHY
-          </h1>
-        )}
+      <path
+        {...common}
+        d="M5 7h14"
+        style={{
+          ...lineStyle,
+          transform: open ? "translateY(5px) rotate(45deg)" : "translateY(0px) rotate(0deg)",
+        }}
+      />
+      <path
+        {...common}
+        d="M5 12h14"
+        style={{
+          ...lineStyle,
+          opacity: open ? 0 : 1,
+        }}
+      />
+      <path
+        {...common}
+        d="M5 17h14"
+        style={{
+          ...lineStyle,
+          transform: open ? "translateY(-5px) rotate(-45deg)" : "translateY(0px) rotate(0deg)",
+        }}
+      />
+    </svg>
+  );
+}
 
-        {/* Menu toggle on the right (always visible) */}
-        <button
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={toggleMenu}
-          className="absolute right-3 md:right-4 lg:right-6 p-2"
+function ArrowRightIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
+      className="w-[18px] h-[18px] text-[#CC5050]"
+    >
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="0.7"
+        d="M19 12H5m14 0-4 4m4-4-4-4"
+      />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
+      className="w-[22px] h-[22px] text-[#CC5050]"
+    >
+      <path
+        d="M7.5 2.75h9A4.75 4.75 0 0 1 21.25 7.5v9A4.75 4.75 0 0 1 16.5 21.25h-9A4.75 4.75 0 0 1 2.75 16.5v-9A4.75 4.75 0 0 1 7.5 2.75Z"
+        stroke="currentColor"
+        strokeWidth="0.7"
+      />
+      <path
+        d="M12 16.25A4.25 4.25 0 1 0 12 7.75a4.25 4.25 0 0 0 0 8.5Z"
+        stroke="currentColor"
+        strokeWidth="0.7"
+      />
+      <path
+        d="M17.25 6.75h.01"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.4"
+      />
+    </svg>
+  );
+}
+
+const NavBar = () => {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  const links = useMemo(
+    () => [
+      { label: "Home", id: "home" },
+      { label: "About", id: "about" },
+      { label: "Services", id: "services" },
+      { label: "Contact", id: "contact" },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+
+    const onPointerDown = (e) => {
+      const container = containerRef.current;
+      const target = e.target;
+
+      if (container?.contains(target)) return;
+      setOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open]);
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      <div ref={containerRef} className="relative w-14 h-14">
+        <div
+          id="arroww-burger-menu"
+          role="menu"
+          aria-hidden={!open}
+          className={open ? "pointer-events-auto" : "pointer-events-none"}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: 224,
+            background: "white",
+            border: "1px solid #CC5050",
+            borderRadius: 16,
+            overflow: "hidden",
+            opacity: open ? 1 : 0,
+            transform: open ? "translate3d(0,0,0)" : "translate3d(0,8px,0)",
+            transformOrigin: "bottom right",
+            transition: "opacity 160ms ease, transform 200ms ease",
+          }}
         >
-          {open ? (
-            <CloseIcon className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
-          ) : (
-            <HamburgerIcon className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
-          )}
-        </button>
-      </div>
-
-      {/* Dropdown panel */}
-      {open && (
-        <nav
-          className="
-            border-t border-[#2F4926]/10
-            text-[#2F4926]
-            w-full
-            max-h-[70vh]
-            overflow-y-auto
-            backdrop:opacity-0
-          "
-          style={{ backgroundColor: "#F0F6EA" }}
-        >
-          {/* Mobile: full width; Larger screens: center with max-width */}
-          <div className="w-full md:max-w-2xl lg:max-w-3xl mx-auto px-6 py-6 md:py-8">
-            
-            <ul className="space-y-6 md:space-y-7 text-center">
-              <li>
-                <Link to="/" onClick={closeMenu} className="block text-xs md:text-sm lg:text-base tracking-wide">
-                  HOME
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" onClick={closeMenu} className="block text-xs md:text-sm lg:text-base tracking-wide">
-                  ABOUT
-                </Link>
-              </li>
-
-              <li>
-                <button
-                  onClick={goToServices}
-                  className="block w-full text-xs md:text-sm lg:text-base tracking-wide"
+          <div className="py-3">
+            {links.map((l, idx) => (
+              <button
+                key={l.id}
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  scrollToSection(l.id);
+                  setOpen(false);
+                }}
+                className="w-full text-left"
+              >
+                <div
+                  className={
+                    "mx-5 py-3 flex items-center justify-between font-geologica font-thin tracking-wide text-[#CC5050] " +
+                    (idx !== links.length - 1 ? "border-b border-[#CC5050]/30" : "")
+                  }
                 >
-                  PRICING & SERVICES
-                </button>
-              </li>
-
-              {/* Portfolio dropdown */}
-              <li>
-                <button
-                  onClick={() => setPortfolioOpen((v) => !v)}
-                  className="w-full text-xs md:text-sm lg:text-base tracking-wide"
-                >
-                  <span className="inline-flex items-center justify-center gap-2">
-                    <Link to="/portfolio" onClick={closeMenu} className="block text-xs md:text-sm lg:text-base tracking-wide">
-                        PORTFOLIO
-                    </Link>
-                  </span>
-                </button>
-              </li>
-
-              <li>
-                <button onClick={openContact} className="block w-full text-xs md:text-sm lg:text-base tracking-wide">
-                    CONTACT
-                </button>
-              </li>
-
-              {/* Social icons row */}
-              <li className="pt-1 pr-2">
-                <div className="flex items-center justify-center gap-3">
-                  <a href="https://facebook.com/schonphotography1" target="_blank" rel="noreferrer" aria-label="Facebook" className="p-1">
-                    <img alt="Facebook" src="/assets/images/facebook.png" className="h-4 w-4" />
-                  </a>
-                  <a href="https://www.instagram.com/schon.weddings" target="_blank" rel="noreferrer" aria-label="Instagram" className="p-1">
-                    <img alt="Instagram" src="/assets/images/insta.png" className="h-4 w-4" />
-                  </a>
+                  <span>{l.label}</span>
+                  <ArrowRightIcon />
                 </div>
-              </li>
-            </ul>
+              </button>
+            ))}
           </div>
-        </nav>
-      )}
-      {/* Click-away overlay for mobile when menu open */}
-      {open && (
-        <button
-          aria-hidden="true"
-          onClick={closeMenu}
-          className="fixed inset-0 -z-10 cursor-default"
-          tabIndex={-1}
-        />
-      )}
-    </header>
-      {/* Contact modal overlay */}
-      {contactOpen && (
-        <div className="fixed inset-0 z-[60]">
-          {/* backdrop */}
-          <div className="absolute inset-0 bg-black/30" onClick={closeContact} />
-          {/* modal container: full width on mobile; centered and constrained on larger screens */}
-          <div className="absolute inset-x-0 top-0 mx-auto h-full overflow-y-auto p-4 sm:p-6">
-            <div className="relative mx-auto w-full sm:max-w-2xl lg:max-w-5xl">
-              <ContactForm onCancel={closeContact} />
-            </div>
+
+          <div className="border-t border-[#CC5050]/30 h-16 flex items-center" style={{ paddingLeft: 20, paddingRight: 76 }}>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              className="inline-flex items-center justify-center"
+            >
+              <InstagramIcon />
+            </a>
           </div>
         </div>
-      )}
-    </>
+
+        <button
+          type="button"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="arroww-burger-menu"
+          onClick={() => setOpen((v) => !v)}
+          className="absolute bottom-0 right-0 flex items-center justify-center"
+          style={{
+            width: open ? 48 : 56,
+            height: open ? 48 : 56,
+            borderRadius: open ? 12 : 16,
+            background: "white",
+            border: open ? "1px solid transparent" : "1px solid #CC5050",
+            transform: open ? "translate3d(-8px,-8px,0)" : "translate3d(0,0,0)",
+            transition:
+              "transform 200ms ease, width 200ms ease, height 200ms ease, border-color 160ms ease, border-radius 200ms ease",
+          }}
+        >
+          <BurgerIcon open={open} />
+        </button>
+      </div>
+    </div>
   );
 };
 
