@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SplitText from "../components/SplitText";
+import Footer from "../components/Footer";
 
 const handleAnimationComplete = () => {
     console.log('All letters have animated!');
@@ -7,10 +8,57 @@ const handleAnimationComplete = () => {
 
 
 const Home = () => {
+    const [headerFade, setHeaderFade] = useState(0);
+    const [showScrollHint, setShowScrollHint] = useState(true);
+
+    useEffect(() => {
+        let raf = 0;
+        const update = () => {
+            const y = typeof window === "undefined" ? 0 : window.scrollY || 0;
+            // Start appearing immediately after scroll begins.
+            const next = Math.max(0, Math.min(1, y / 80));
+            setHeaderFade(next);
+            setShowScrollHint(y < 4);
+        };
+
+        const onScroll = () => {
+            if (raf) return;
+            raf = window.requestAnimationFrame(() => {
+                raf = 0;
+                update();
+            });
+        };
+
+        update();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            if (raf) window.cancelAnimationFrame(raf);
+        };
+    }, []);
+
     return (
         <div>
-            <header className="fixed top-6 left-6 right-6 z-40 flex items-center justify-between">
-                <div className="flex items-center gap-3 font-geologica font-thin text-[#CC5050] text-2xl tracking-wide">
+            <header className="fixed top-0 left-0 right-0 z-40">
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none"
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 140,
+                        opacity: headerFade,
+                        transition: "opacity 160ms ease",
+                        background:
+                            "linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.0))",
+                    }}
+                />
+
+                <div className="relative px-6 pt-6">
+                    <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 font-geologica font-thin text-[#CC5050] text-3xl tracking-wide">
                     <img alt="logo" src="/assets/images/Logo-transparent.png" width="44" />
                     <span>Arroww</span>
                 </div>
@@ -43,6 +91,8 @@ const Home = () => {
                         />
                     </svg>
                 </button>
+                    </div>
+                </div>
             </header>
 
             <section id="home" className="min-h-screen flex items-center scroll-mt-24">
@@ -78,32 +128,53 @@ const Home = () => {
                         onLetterAnimationComplete={handleAnimationComplete}
                         showCallback
                     />
+
+                    <div
+                        className={
+                            "mt-14 flex items-center gap-1 text-[#CC5050] text-lg font-geologica font-thin transition-opacity duration-200 " +
+                            (showScrollHint ? "opacity-100" : "opacity-0")
+                        }
+                        aria-hidden={!showScrollHint}
+                    >
+                        <span>Scroll</span>
+                        <svg
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="28"
+                            height="28"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            className="w-[26px] h-[26px] text-[#CC5050]"
+                        >
+                            <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="0.7"
+                                d="M12 19V5m0 14-4-4m4 4 4-4"
+                            />
+                        </svg>
+                    </div>
                 </div>
+
             </section>
 
             <section id="about" className="min-h-screen flex items-center scroll-mt-24">
                 <div className="w-full px-6 sm:px-10 md:px-16 lg:px-20">
                     <h2 className="font-geologica font-thin text-[#CC5050] text-4xl sm:text-5xl">
-                        About
+                        Templates are easy. Standing out isn't.
+                    </h2>
+                    <h2 className="font-geologica font-thin text-[#CC5050] text-4xl sm:text-5xl">
+                        Arroww is a South African web development studio creating custom websites that help businesses move forward.
                     </h2>
                 </div>
             </section>
 
-            <section id="services" className="min-h-screen flex items-center scroll-mt-24">
-                <div className="w-full px-6 sm:px-10 md:px-16 lg:px-20">
-                    <h2 className="font-geologica font-thin text-[#CC5050] text-4xl sm:text-5xl">
-                        Services
-                    </h2>
-                </div>
+            <section>
+                Work done
             </section>
 
-            <section id="contact" className="min-h-screen flex items-center scroll-mt-24">
-                <div className="w-full px-6 sm:px-10 md:px-16 lg:px-20">
-                    <h2 className="font-geologica font-thin text-[#CC5050] text-4xl sm:text-5xl">
-                        Contact
-                    </h2>
-                </div>
-            </section>
+            <Footer />
         </div>
     );
 }

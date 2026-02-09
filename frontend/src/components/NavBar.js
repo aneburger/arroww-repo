@@ -123,7 +123,7 @@ const NavBar = () => {
     () => [
       { label: "Home", id: "home" },
       { label: "About", id: "about" },
-      { label: "Services", id: "services" },
+      { label: "Work", id: "work" },
       { label: "Contact", id: "contact" },
     ],
     []
