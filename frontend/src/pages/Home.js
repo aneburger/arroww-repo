@@ -264,20 +264,20 @@ const Home = () => {
                             </div>
 
                             <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                                <a
+                                {/* <a
                                     href="https://www.schon-photography.com/"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="w-full max-w-xs sm:max-w-md mt-2 rounded-[17px] border border-[#ffcaca]/80 overflow-hidden bg-[#ff8e8e75] flex items-center justify-center p-6 sm:p-6 bg:hover-[#ff8e8e75]"
                                     aria-label="Open Schon Photography website"
-                                >
+                                > */}
                                     <img
                                         src="/assets/images/White-Brand-Name.png"
                                         alt="Schön Photography logo"
                                         className="h-36 sm:h-44 md:h-52 w-auto max-w-[90%] opacity-90"
                                         loading="lazy"
                                     />
-                                </a>
+                                {/* </a> */}
                             </div>
                         </div>
                     </div>

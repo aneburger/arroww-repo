@@ -43,12 +43,12 @@ export async function onRequestPost(context) {
     }
 
     const secret = env.RECAPTCHA_SECRET;
-    if (!secret) {
-      return json(500, {
-        success: false,
-        message: "Captcha not configured on server (missing RECAPTCHA_SECRET).",
-      });
-    }
+    // if (!secret) {
+    //   return json(500, {
+    //     success: false,
+    //     message: "Captcha not configured on server (missing RECAPTCHA_SECRET).",
+    //   });
+    // }
 
     const parsedMinScore = parseFloat(env.RECAPTCHA_MIN_SCORE);
     const minScore = Number.isFinite(parsedMinScore) ? parsedMinScore : 0.5;
@@ -199,7 +199,7 @@ export async function onRequestPost(context) {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          from: `Booking Form <${FROM_EMAIL}>`,
+          from: `Enquiry Form <${FROM_EMAIL}>`,
           to: TO_EMAIL,
           subject,
           text: textBody,
