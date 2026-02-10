@@ -43,7 +43,15 @@ export async function onRequestPost(context) {
     }
 
     const secret = env.RECAPTCHA_SECRET;
-    const minScore = parseFloat(env.RECAPTCHA_MIN_SCORE);
+    if (!secret) {
+      return json(500, {
+        success: false,
+        message: "Captcha not configured on server (missing RECAPTCHA_SECRET).",
+      });
+    }
+
+    const parsedMinScore = parseFloat(env.RECAPTCHA_MIN_SCORE);
+    const minScore = Number.isFinite(parsedMinScore) ? parsedMinScore : 0.5;
 
     const remoteIp =
       request.headers.get("CF-Connecting-IP") ||
@@ -66,27 +74,36 @@ export async function onRequestPost(context) {
     const verifyData = await verifyRes.json();
 
     if (!verifyData.success) {
-      return json(429, {
+      const errorCodes = Array.isArray(verifyData["error-codes"])
+        ? verifyData["error-codes"].join(", ")
+        : "";
+
+      return json(403, {
         success: false,
         message: "Captcha verification failed.",
+        ...(errorCodes ? { captchaErrorCodes: errorCodes } : {}),
       });
     }
 
     if (verifyData.action && action && verifyData.action !== action) {
-      return json(429, {
+      return json(403, {
         success: false,
         message: "Captcha action mismatch.",
+        captchaExpectedAction: action,
+        captchaActualAction: verifyData.action,
       });
     }
 
     if (typeof verifyData.score === "number" && verifyData.score < minScore) {
-      return json(429, {
+      return json(403, {
         success: false,
         message: "Captcha score too low.",
+        captchaScore: verifyData.score,
+        captchaMinScore: minScore,
       });
     }
   } catch (e) {
-    return json(429, {
+    return json(502, {
       success: false,
       message: "Captcha verification error.",
     });
