@@ -91,9 +91,8 @@ app.post("/contact", async (req, res) => {
 
     const errors = {};
     const budgetOptions = [
-        "Under R5,000",
-        "R5,000 – R10,000",
-        "R10,000 – R20,000",
+        "R5,000 - R10,000",
+        "R10,000 - R20,000",
         "R20,000+",
         "Not sure yet",
     ];

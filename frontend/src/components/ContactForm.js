@@ -1,6 +1,22 @@
 import React, { useMemo, useState } from "react";
 
-const RECAPTCHA_SITE_KEY = "6Ld1I2csAAAAAFcSFfobwDCS3I99eMVV78NjIXji";
+function getRecaptchaSiteKeyFromPage() {
+  if (typeof document === "undefined") return "";
+
+  const metaKey = document
+    .querySelector('meta[name="recaptcha-site-key"]')
+    ?.getAttribute("content")
+    ?.trim();
+  if (metaKey) return metaKey;
+
+  const scripts = Array.from(document.querySelectorAll("script[src]"));
+  const recaptchaScript = scripts.find((s) =>
+    String(s.getAttribute("src") || "").includes("google.com/recaptcha/api.js")
+  );
+  const src = String(recaptchaScript?.getAttribute("src") || "");
+  const match = /[?&]render=([^&]+)/.exec(src);
+  return match?.[1] ? decodeURIComponent(match[1]) : "";
+}
 
 function normalizeWhitespace(value) {
   return String(value || "").trim().replace(/\s+/g, " ");
@@ -105,9 +121,22 @@ const ContactForm = ({ onCancel }) => {
         return;
       }
 
-      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
-        action: "contact_submit",
-      });
+      const siteKey = getRecaptchaSiteKeyFromPage();
+      if (!siteKey) {
+        setServerMessage("Captcha site key missing. Please refresh and try again.");
+        return;
+      }
+
+      let token;
+      try {
+        token = await window.grecaptcha.execute(siteKey, { action: "contact_submit" });
+      } catch (captchaErr) {
+        console.error("reCAPTCHA execute failed", captchaErr);
+        setServerMessage(
+          "Captcha failed to verify. Please disable blockers/VPN and try again."
+        );
+        return;
+      }
 
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -131,6 +160,7 @@ const ContactForm = ({ onCancel }) => {
       setFormData(initialFormState);
       setErrors({});
     } catch (err) {
+      console.error("Contact form submit failed", err);
       setServerMessage("Network error. Please try again later.");
     } finally {
       setSubmitting(false);
