@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home";
-import DotGridBackground from "./components/DotGridBackground";
 import LogoCursor from "./components/LogoCursor";
 import NavBar from "./components/NavBar";
+import DotGridBackground from "./components/DotGridBackground";
 
 const App = () => {
     return (
@@ -12,11 +12,11 @@ const App = () => {
                     {/* <LogoCursor size={48} ease={0.16} /> */}
                     <NavBar />
                     <DotGridBackground
-                        dotSize={4}
+                        dotSize={5}
                         gap={14}
-                        baseColor="#f9dcdc"
-                        activeColor="#eb0400"
-                        proximity={110}
+                        baseColor="#271e37"
+                        activeColor="#fd9292"
+                        proximity={120}
                         speedTrigger={100}
                         shockRadius={250}
                         shockStrength={5}

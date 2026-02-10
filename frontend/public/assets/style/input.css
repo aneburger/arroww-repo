@@ -14,7 +14,7 @@
 @source "../../../src/**/*.{js,jsx,ts,tsx}";
 
 /* Optional custom styles */
-body { background: #FFFFFF; }
+body { background: #000000; }
 
 .font-geologica { font-family: 'Geologica', sans-serif; }
 

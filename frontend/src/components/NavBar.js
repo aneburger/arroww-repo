@@ -13,7 +13,7 @@ function scrollToSection(sectionId) {
 
 function BurgerIcon({ open }) {
   const common = {
-    stroke: "#CC5050",
+    stroke: "#ffcaca",
     strokeWidth: 0.7,
     strokeLinecap: "round",
   };
@@ -67,11 +67,11 @@ function ArrowRightIcon() {
     <svg
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="26"
+      height="26"
       fill="none"
       viewBox="0 0 24 24"
-      className="w-[18px] h-[18px] text-[#CC5050]"
+      className="w-[24px] h-[24px] text-[#ffcaca]"
     >
       <path
         stroke="currentColor"
@@ -89,11 +89,11 @@ function InstagramIcon() {
     <svg
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="29"
+      height="29"
       fill="none"
       viewBox="0 0 24 24"
-      className="w-[22px] h-[22px] text-[#CC5050]"
+      className="w-[28px] h-[28px] text-[#ffcaca]"
     >
       <path
         d="M7.5 2.75h9A4.75 4.75 0 0 1 21.25 7.5v9A4.75 4.75 0 0 1 16.5 21.25h-9A4.75 4.75 0 0 1 2.75 16.5v-9A4.75 4.75 0 0 1 7.5 2.75Z"
@@ -165,9 +165,9 @@ const NavBar = () => {
             bottom: 0,
             right: 0,
             width: 224,
-            background: "white",
-            border: "1px solid #CC5050",
-            borderRadius: 16,
+            background: "black",
+            border: "1px solid #ffcaca",
+            borderRadius: 12,
             overflow: "hidden",
             opacity: open ? 1 : 0,
             transform: open ? "translate3d(0,0,0)" : "translate3d(0,8px,0)",
@@ -189,8 +189,8 @@ const NavBar = () => {
               >
                 <div
                   className={
-                    "mx-5 py-3 flex items-center justify-between font-geologica font-thin tracking-wide text-[#CC5050] " +
-                    (idx !== links.length - 1 ? "border-b border-[#CC5050]/30" : "")
+                    "mx-5 py-3 flex items-center justify-between font-geologica font-thin tracking-wide text-[#ffcaca] " +
+                    (idx !== links.length - 1 ? "border-b border-[#ffcaca]/30" : "")
                   }
                 >
                   <span>{l.label}</span>
@@ -200,7 +200,7 @@ const NavBar = () => {
             ))}
           </div>
 
-          <div className="border-t border-[#CC5050]/30 h-16 flex items-center" style={{ paddingLeft: 20, paddingRight: 76 }}>
+          <div className="border-t border-[#ffcaca]/30 h-16 flex items-center" style={{ paddingLeft: 20, paddingRight: 76 }}>
             <a
               href="https://instagram.com"
               target="_blank"
@@ -223,9 +223,9 @@ const NavBar = () => {
           style={{
             width: open ? 48 : 56,
             height: open ? 48 : 56,
-            borderRadius: open ? 12 : 16,
-            background: "white",
-            border: open ? "1px solid transparent" : "1px solid #CC5050",
+            borderRadius: open ? 8 : 12,
+            background: open ? "black" : "#ff8e8e75",
+            border: open ? "1px solid transparent" : "1px solid #ffcaca",
             transform: open ? "translate3d(-8px,-8px,0)" : "translate3d(0,0,0)",
             transition:
               "transform 200ms ease, width 200ms ease, height 200ms ease, border-color 160ms ease, border-radius 200ms ease",

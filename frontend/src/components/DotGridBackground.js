@@ -29,11 +29,11 @@ function lerpColor(c1, c2, t) {
  * Mounted as fixed full-viewport background; does not intercept pointer events.
  */
 export default function DotGridBackground({
-  dotSize = 4,
+  dotSize = 5,
   gap = 14,
-  baseColor = "#f9dcdc",
-  activeColor = "#eb0400",
-  proximity = 110,
+  baseColor="#271e37",
+  activeColor="#fd9292",
+  proximity = 120,
   speedTrigger = 100,
   shockRadius = 250,
   shockStrength = 5,
