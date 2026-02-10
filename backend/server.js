@@ -1,6 +1,6 @@
 /*****************************************
  * Created On: 2025 / 11 / 28
- * Last Modified: 2025 / 11 / 28
+ * Last Modified: 2025 / 02 / 10
  * 
  * Author: Ané Burger t.a. Arroww Web Dev
  * 
@@ -51,7 +51,7 @@ function sanitizeInput(input) {
 }
 
 function onlyDigits(str) {
-  return (str || '').replace(/\D+/g, '');
+    return (str || '').replace(/\D+/g, '');
 }
 
 app.post("/contact", async (req, res) => {
@@ -89,74 +89,49 @@ app.post("/contact", async (req, res) => {
 	}
 
 
-	const errors = {};
-	let {name, number, email, type, date, venue, details} = req.body;
+    const errors = {};
+    const budgetOptions = [
+        "Under R5,000",
+        "R5,000 – R10,000",
+        "R10,000 – R20,000",
+        "R20,000+",
+        "Not sure yet",
+    ];
+    let {name, email, brief, budget} = req.body;
 
-	name = sanitizeInput(name);
-    number = sanitizeInput(number);
+    name = sanitizeInput(name);
     email = sanitizeInput(email);
-    type = sanitizeInput(type);
-    date = sanitizeInput(date);
-    venue = sanitizeInput(venue);
-    details = sanitizeInput(details);
+    brief = sanitizeInput(brief);
+    budget = sanitizeInput(budget);
 
-	if (name && name.length > 100) errors.name = "Full name cannot exceed 100 characters.";
-	if (number && number.length > 50) errors.number = "Phone number cannot exceed 50 characters.";
-	if (email && email.length > 50) errors.email = "Email cannot exceed 50 characters.";
-	if (date && date.length > 50) errors.date = "Date cannot exceed 50 characters.";
-	if (venue && venue.length > 100) errors.venue = "Venue cannot exceed 100 characters.";
-	if (details && details.length > 200) errors.details = "Details cannot exceed 200 characters.";
+    if (name && name.length > 100) errors.name = "Full name cannot exceed 100 characters.";
+    if (email && email.length > 50) errors.email = "Email cannot exceed 50 characters.";
+    if (brief && brief.length > 500) errors.brief = "Brief cannot exceed 500 characters.";
+    if (budget && budget.length > 50) errors.budget = "Budget cannot exceed 50 characters.";
 
-	if(!name) {
-		errors.name = "Full name is required.";
-	} else {
-		const fullName = name.replace(/\s+/g, ' ').trim();
-		if (!/^[\p{L}]+(?:[-'][\p{L}]+)*(?: [\p{L}]+(?:[-'][\p{L}]+)*)*$/u.test(fullName)) {
-			errors.name = "Invalid full name.";
-		}
-	}
+    if(!name) {
+        errors.name = "Full name is required.";
+    } else {
+        const fullName = name.replace(/\s+/g, ' ').trim();
+        if (!/^[\p{L}]+(?:[-'][\p{L}]+)*(?: [\p{L}]+(?:[-'][\p{L}]+)*)*$/u.test(fullName)) {
+            errors.name = "Invalid full name.";
+        }
+    }
 
-	const digitsOnly = onlyDigits(number);
-	if (!number) {
-		errors.number = "Phone number required.";
-	} else if (digitsOnly.length < 10) {
-		errors.number = "Phone number must be at least 10 digits.";
-	}
-
-	if (!email) {
+    if (!email) {
         errors.email = "Email is required.";
     } else if (!validator.isEmail(email)) {
         errors.email = "Invalid email format.";
     }
 
-	const validTypes = [
-        "Wedding",
-        "Engagement",
-        "Couple Session",
-        "Matric Farewell",
-        "Other"
-    ];
-
-	if (!type || !validTypes.includes(type)) {
-        errors.type = "Invalid booking type.";
+    if (!brief) {
+        errors.brief = "Brief is required.";
     }
 
-	if (!date) {
-        errors.date = "Date is required.";
-    } else if (!validator.isISO8601(date, {strict: true})) {
-        errors.date = "Invalid date format.";
-    }
-
-	if (!venue) {
-        errors.venue = "Venue is required.";
-    } else if (!/^[\p{L}\d]+(?:[-'@&][\p{L}\d]+)*(?:[ ,][\p{L}\d]+(?:[-'@&][\p{L}\d]+)*)*$/u.test(venue)) {
-        errors.venue = "Invalid venue.";
-    }
-
-	if (!details) {
-        errors.details = "Details are required.";
-    } else if (!validator.isLength(details, { max: 200 })) {
-        errors.details = "Details cannot exceed 200 characters.";
+    if (!budget) {
+        errors.budget = "Budget is required.";
+    } else if (!budgetOptions.includes(budget)) {
+        errors.budget = "Invalid budget option.";
     }
 
 	if (Object.keys(errors).length > 0) {
@@ -178,25 +153,19 @@ app.post("/contact", async (req, res) => {
 		const mailgun = new Mailgun(FormData);
         const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
 
-        const subject = `New ${type} enquiry from ${name}`;
+        const subject = `New enquiry from ${name}`;
         const textBody = `Name: ${name}
-						Phone: ${number}
-						Email: ${email}
-						Type: ${type}
-						Date: ${date}
-						Venue: ${venue}
-						Details:
-						${details}`;
+                    Email: ${email}
+                    Budget: ${budget}
+                    Brief:
+                    ${brief}`;
 
         const htmlBody = `
-            <h2>New Booking Enquiry</h2>
+            <h2>New Enquiry</h2>
             <p><strong>Name:</strong> ${validator.escape(name)}</p>
-            <p><strong>Phone:</strong> ${validator.escape(number)}</p>
             <p><strong>Email:</strong> ${validator.escape(email)}</p>
-            <p><strong>Type:</strong> ${validator.escape(type)}</p>
-            <p><strong>Date:</strong> ${validator.escape(date)}</p>
-            <p><strong>Venue:</strong> ${validator.escape(venue)}</p>
-            <p><strong>Details:</strong><br/>${validator.escape(details)}</p>
+            <p><strong>Budget:</strong> ${validator.escape(budget)}</p>
+            <p><strong>Brief:</strong><br/>${validator.escape(brief)}</p>
         `;
 
         const data = await mg.messages.create(MAILGUN_DOMAIN, {

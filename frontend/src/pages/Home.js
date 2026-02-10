@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SplitText from "../components/SplitText";
 import Footer from "../components/Footer";
+import Contact, { openContactModal } from "../components/Contact";
 
 const handleAnimationComplete = () => {
     console.log('All letters have animated!');
@@ -66,13 +67,12 @@ const Home = () => {
                 <button
                     type="button"
                     onClick={() => {
-                        const el = document.getElementById("contact");
-                        el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        openContactModal();
                     }}
                     className="flex items-center gap-2 rounded-[12px] border border-[#ffcaca] bg-[#ff8e8e75] px-5 py-2 font-geologica font-thin text-[#ffcaca]"
-                    aria-label="Scroll to contact"
+                    aria-label="Open contact form"
                 >
-                    <span>Contact</span>
+                    <span>Contact Us</span>
                     <svg
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
@@ -231,7 +231,7 @@ const Home = () => {
                                 </h2>
 
                                 <p className="mt-6 font-geologica font-thin text-[#ffcaca] text-lg sm:text-xl leading-relaxed">
-                                    A clean, image-first experience designed to keep the focus on the work.
+                                    A clean photography website that doesn't shout — because it doesn't need to.
                                 </p>
 
                                 <a
@@ -284,6 +284,7 @@ const Home = () => {
                 </div>
             </section>
 
+            <Contact hideButton />
             <Footer />
         </div>
     );

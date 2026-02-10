@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { openContactModal } from "./Contact";
 
 function scrollToSection(sectionId) {
   if (typeof document === "undefined") return;
@@ -182,7 +183,11 @@ const NavBar = () => {
                 type="button"
                 role="menuitem"
                 onClick={() => {
-                  scrollToSection(l.id);
+                  if (l.id === "contact") {
+                    openContactModal();
+                  } else {
+                    scrollToSection(l.id);
+                  }
                   setOpen(false);
                 }}
                 className="w-full text-left"
@@ -202,7 +207,7 @@ const NavBar = () => {
 
           <div className="border-t border-[#ffcaca]/30 h-16 flex items-center" style={{ paddingLeft: 20, paddingRight: 76 }}>
             <a
-              href="https://instagram.com"
+              href="https://instagram.com/websitesbyarroww"
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
